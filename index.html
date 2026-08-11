@@ -7,1386 +7,675 @@
 <title>VISION AI</title>
 
 <style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
+* {
+    box-sizing: border-box;
 }
 
-html,body{
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#080500;
-    color:#ffe7a0;
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #020006;
+    color: white;
 }
 
-/* MAIN ENVIRONMENT */
-
-#scene{
-    position:fixed;
-    inset:0;
-    width:100%;
-    height:100%;
-    z-index:0;
+body {
+    perspective: 1000px;
 }
 
-/* DARK GOLD OVERLAY */
+/* BACKGROUND */
 
-.overlay{
-    position:fixed;
-    inset:0;
-    z-index:1;
-    pointer-events:none;
-
+.space {
+    position: fixed;
+    inset: 0;
     background:
-        radial-gradient(
-            circle at center,
-            rgba(255,190,40,.08),
-            transparent 35%
-        ),
-        linear-gradient(
-            rgba(0,0,0,.12),
-            rgba(0,0,0,.45)
-        );
+        radial-gradient(circle at center,
+        rgba(255,210,0,0.12),
+        transparent 25%),
+        radial-gradient(circle at center,
+        #160b00 0%,
+        #050008 45%,
+        #000 100%);
+    overflow: hidden;
+}
+
+/* PARTICLES */
+
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: #ffd84d;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #ffd84d;
+    animation: float 8s infinite linear;
+}
+
+@keyframes float {
+    from {
+        transform: translateY(110vh) translateZ(0);
+        opacity: 0;
+    }
+
+    20% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    to {
+        transform: translateY(-10vh) translateZ(300px);
+        opacity: 0;
+    }
 }
 
 /* TOP BAR */
 
-.topbar{
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-
-    height:75px;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    padding:0 35px;
-
-    z-index:5;
-
-    border-bottom:1px solid rgba(255,205,70,.25);
-
-    background:rgba(5,3,0,.35);
-
-    backdrop-filter:blur(10px);
+.top {
+    position: fixed;
+    top: 20px;
+    left: 25px;
+    right: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
 }
 
-.logo{
-    font-size:27px;
-    font-weight:bold;
-    letter-spacing:10px;
-
-    color:#ffd45c;
-
+.logo {
+    font-size: 25px;
+    letter-spacing: 7px;
+    font-weight: bold;
+    color: #ffe66b;
     text-shadow:
-        0 0 8px #ffb300,
-        0 0 25px #ff8c00,
-        0 0 50px rgba(255,180,0,.8);
+        0 0 10px #ffcf00,
+        0 0 25px #ffb300;
 }
 
-.identity{
-    font-size:13px;
-    letter-spacing:3px;
-    color:#d9b65c;
+.status {
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: #d9d9d9;
 }
 
-.identity span{
-    color:#fff0a8;
+.status span {
+    color: #00ff99;
 }
 
-/* CENTER AI DISPLAY */
+/* MAIN 3D AREA */
 
-.centerUI{
-    position:absolute;
-    top:50%;
-    left:50%;
-
-    transform:translate(-50%,-50%);
-
-    z-index:4;
-
-    text-align:center;
-
-    pointer-events:none;
+.scene {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1200px;
 }
 
-.aiName{
-    font-size:42px;
-    letter-spacing:14px;
-    font-weight:bold;
+/* ENERGY RINGS */
 
-    color:#fff0a0;
-
-    text-shadow:
-        0 0 10px #ffd000,
-        0 0 30px #ffae00,
-        0 0 80px #ff8a00;
+.ring {
+    position: absolute;
+    width: 360px;
+    height: 360px;
+    border: 1px solid rgba(255,210,50,0.35);
+    border-radius: 50%;
+    transform-style: preserve-3d;
 }
 
-.status{
-    margin-top:12px;
-
-    font-size:12px;
-    letter-spacing:5px;
-
-    color:#dcb65b;
+.ring1 {
+    animation: rotate1 14s linear infinite;
 }
 
-.statusDot{
-    display:inline-block;
-
-    width:8px;
-    height:8px;
-
-    border-radius:50%;
-
-    background:#ffd43b;
-
-    box-shadow:
-        0 0 8px #ffd43b,
-        0 0 20px #ff9d00;
-
-    animation:pulse 1.4s infinite;
+.ring2 {
+    width: 430px;
+    height: 430px;
+    border-color: rgba(255,150,0,0.25);
+    animation: rotate2 18s linear infinite reverse;
 }
 
-@keyframes pulse{
+.ring3 {
+    width: 510px;
+    height: 510px;
+    border-color: rgba(255,230,80,0.12);
+    animation: rotate3 25s linear infinite;
+}
 
-    0%,100%{
-        opacity:.4;
-        transform:scale(.8);
+@keyframes rotate1 {
+    from {
+        transform: rotateX(65deg) rotateZ(0deg);
     }
 
-    50%{
-        opacity:1;
-        transform:scale(1.3);
+    to {
+        transform: rotateX(65deg) rotateZ(360deg);
+    }
+}
+
+@keyframes rotate2 {
+    from {
+        transform: rotateY(65deg) rotateZ(0deg);
     }
 
+    to {
+        transform: rotateY(65deg) rotateZ(360deg);
+    }
 }
 
-/* CHAT PANEL */
+@keyframes rotate3 {
+    from {
+        transform: rotateX(70deg) rotateY(30deg) rotateZ(0deg);
+    }
 
-.chat{
-    position:absolute;
-
-    left:50%;
-    bottom:30px;
-
-    transform:translateX(-50%);
-
-    width:min(760px,92%);
-
-    z-index:10;
-
-    background:rgba(12,8,0,.72);
-
-    border:1px solid rgba(255,204,65,.4);
-
-    border-radius:18px;
-
-    box-shadow:
-        0 0 20px rgba(255,166,0,.12),
-        inset 0 0 30px rgba(255,170,0,.04);
-
-    backdrop-filter:blur(15px);
-
-    overflow:hidden;
+    to {
+        transform: rotateX(70deg) rotateY(30deg) rotateZ(360deg);
+    }
 }
 
-.messages{
-    height:150px;
+/* MIND STONE */
 
-    overflow-y:auto;
-
-    padding:15px 20px;
-
-    font-size:14px;
-
-    line-height:1.6;
+.stone {
+    position: relative;
+    width: 145px;
+    height: 190px;
+    transform-style: preserve-3d;
+    transform: rotateX(12deg) rotateY(-18deg);
+    animation: stoneFloat 5s ease-in-out infinite;
+    z-index: 5;
 }
 
-.message{
-    margin-bottom:8px;
+@keyframes stoneFloat {
+
+    0%,100% {
+        transform:
+            translateY(0)
+            rotateX(12deg)
+            rotateY(-18deg);
+    }
+
+    50% {
+        transform:
+            translateY(-18px)
+            rotateX(18deg)
+            rotateY(18deg);
+    }
 }
 
-.vision{
-    color:#ffd75b;
-}
-
-.user{
-    color:#fff3c0;
-}
-
-.inputArea{
-    display:flex;
-
-    padding:10px;
-
-    gap:8px;
-
-    border-top:1px solid rgba(255,200,60,.2);
-}
-
-#input{
-    flex:1;
-
-    background:rgba(255,220,100,.05);
-
-    border:1px solid rgba(255,204,65,.35);
-
-    border-radius:10px;
-
-    padding:13px;
-
-    outline:none;
-
-    color:#fff2ba;
-
-    font-size:14px;
-}
-
-#input::placeholder{
-    color:#987f43;
-}
-
-button{
-    border:none;
-
-    border-radius:10px;
-
-    padding:0 18px;
-
-    cursor:pointer;
-
-    color:#241600;
-
-    background:linear-gradient(
-        135deg,
-        #fff09a,
-        #ffbf22,
-        #ff8b00
+.stone-core {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(135deg,
+        #fff36b 0%,
+        #ffd000 25%,
+        #ff9d00 55%,
+        #ff5e00 100%);
+    clip-path: polygon(
+        50% 0%,
+        88% 15%,
+        100% 52%,
+        80% 90%,
+        50% 100%,
+        20% 90%,
+        0% 52%,
+        12% 15%
     );
 
-    font-weight:bold;
-
     box-shadow:
-        0 0 12px rgba(255,170,0,.4);
+        0 0 30px #ffd000,
+        0 0 70px #ff9d00,
+        0 0 140px rgba(255,130,0,0.8);
 
-    transition:.2s;
+    filter: saturate(1.4);
 }
 
-button:hover{
-    transform:scale(1.05);
+/* INNER ENERGY */
 
-    box-shadow:
-        0 0 25px rgba(255,190,0,.8);
+.energy {
+    position: absolute;
+    inset: 25px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        white 0%,
+        #fff58c 10%,
+        #ffd000 35%,
+        transparent 70%
+    );
+
+    filter: blur(4px);
+    animation: pulse 2s infinite alternate;
 }
 
-.mic{
-    width:48px;
-    padding:0;
-}
+@keyframes pulse {
 
-/* SIDE INFORMATION */
-
-.sidePanel{
-
-    position:absolute;
-
-    right:25px;
-    top:110px;
-
-    width:190px;
-
-    z-index:5;
-
-    padding:15px;
-
-    border:1px solid rgba(255,200,70,.22);
-
-    background:rgba(8,5,0,.4);
-
-    backdrop-filter:blur(10px);
-
-    border-radius:12px;
-
-    font-size:10px;
-
-    letter-spacing:2px;
-
-    color:#b79a50;
-}
-
-.sidePanel h3{
-
-    color:#ffe48b;
-
-    font-size:11px;
-
-    margin-bottom:12px;
-
-    letter-spacing:3px;
-}
-
-.data{
-    margin:9px 0;
-}
-
-.bar{
-    height:3px;
-
-    margin-top:5px;
-
-    background:#332400;
-
-    overflow:hidden;
-
-    border-radius:5px;
-}
-
-.bar div{
-
-    height:100%;
-
-    width:80%;
-
-    background:#ffc400;
-
-    box-shadow:0 0 8px #ffb000;
-
-    animation:dataPulse 2s infinite alternate;
-}
-
-@keyframes dataPulse{
-
-    from{
-        width:45%;
+    from {
+        transform: scale(.8);
+        opacity: .7;
     }
 
-    to{
-        width:95%;
+    to {
+        transform: scale(1.2);
+        opacity: 1;
     }
+}
 
+/* VISION */
+
+.identity {
+    position: absolute;
+    top: calc(50% + 155px);
+    text-align: center;
+    z-index: 8;
+}
+
+.identity h1 {
+    margin: 0;
+    font-size: 52px;
+    letter-spacing: 15px;
+    color: #fff2a6;
+
+    text-shadow:
+        0 0 10px #fff000,
+        0 0 30px #ffb000,
+        0 0 70px #ff7000;
+}
+
+.identity p {
+    margin-top: 8px;
+    font-size: 11px;
+    letter-spacing: 5px;
+    color: #aaa;
+}
+
+/* CHAT */
+
+.chat {
+    position: fixed;
+    left: 50%;
+    bottom: 25px;
+    transform: translateX(-50%);
+    width: min(750px, 92%);
+    z-index: 20;
+}
+
+.response {
+    min-height: 60px;
+    max-height: 150px;
+    overflow-y: auto;
+
+    padding: 15px 20px;
+    margin-bottom: 10px;
+
+    border: 1px solid rgba(255,210,50,.25);
+    border-radius: 15px;
+
+    background: rgba(0,0,0,.55);
+    backdrop-filter: blur(15px);
+
+    box-shadow:
+        0 0 25px rgba(255,190,0,.08);
+}
+
+.response .name {
+    color: #ffd83d;
+    font-size: 11px;
+    letter-spacing: 3px;
+    margin-bottom: 6px;
+}
+
+.input-area {
+    display: flex;
+    gap: 8px;
+}
+
+input {
+    flex: 1;
+    padding: 15px 18px;
+
+    border-radius: 30px;
+    border: 1px solid rgba(255,210,50,.35);
+
+    background: rgba(0,0,0,.75);
+    color: white;
+
+    outline: none;
+    font-size: 15px;
+}
+
+input:focus {
+    border-color: #ffd000;
+    box-shadow: 0 0 15px rgba(255,210,0,.2);
+}
+
+button {
+    width: 52px;
+    height: 52px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: linear-gradient(
+        135deg,
+        #fff36b,
+        #ff9d00
+    );
+
+    color: #170900;
+
+    font-size: 20px;
+    cursor: pointer;
+
+    box-shadow:
+        0 0 15px rgba(255,200,0,.6);
+
+    transition: .2s;
+}
+
+button:hover {
+    transform: scale(1.08);
+}
+
+button:active {
+    transform: scale(.95);
 }
 
 /* MOBILE */
 
-@media(max-width:700px){
+@media(max-width:600px) {
 
-    .topbar{
-        padding:0 15px;
-        height:60px;
+    .logo {
+        font-size: 18px;
+        letter-spacing: 4px;
     }
 
-    .logo{
-        font-size:19px;
-        letter-spacing:6px;
+    .status {
+        display: none;
     }
 
-    .identity{
-        font-size:9px;
+    .stone {
+        width: 105px;
+        height: 140px;
     }
 
-    .aiName{
-        font-size:30px;
-        letter-spacing:8px;
+    .ring {
+        width: 260px;
+        height: 260px;
     }
 
-    .sidePanel{
-        display:none;
+    .ring2 {
+        width: 310px;
+        height: 310px;
     }
 
-    .chat{
-        bottom:15px;
+    .ring3 {
+        width: 360px;
+        height: 360px;
     }
 
+    .identity {
+        top: calc(50% + 120px);
+    }
+
+    .identity h1 {
+        font-size: 34px;
+        letter-spacing: 8px;
+    }
+
+    .identity p {
+        font-size: 8px;
+    }
 }
-
 </style>
 </head>
 
 <body>
 
-<div id="scene"></div>
+<div class="space" id="space"></div>
 
-<div class="overlay"></div>
+<div class="top">
+    <div class="logo">VISION</div>
 
-<!-- TOP -->
+    <div class="status">
+        SYSTEM <span>● ONLINE</span>
+    </div>
+</div>
 
-<div class="topbar">
+<div class="scene">
 
-    <div class="logo">
-        V.I.S.I.O.N.
+    <div class="ring ring1"></div>
+    <div class="ring ring2"></div>
+    <div class="ring ring3"></div>
+
+    <div class="stone">
+        <div class="stone-core"></div>
+        <div class="energy"></div>
     </div>
 
     <div class="identity">
-        USER RECOGNIZED:
-        <span>AJIT</span>
+        <h1>VISION</h1>
+        <p>INTELLIGENCE • AWARENESS • RESPONSE</p>
     </div>
 
 </div>
-
-
-<!-- CENTER -->
-
-<div class="centerUI">
-
-    <div class="aiName">
-        VISION
-    </div>
-
-    <div class="status">
-        <span class="statusDot"></span>
-        &nbsp; NEURAL CORE ONLINE
-    </div>
-
-</div>
-
-
-<!-- SIDE DATA -->
-
-<div class="sidePanel">
-
-    <h3>CORE SYSTEM</h3>
-
-    <div class="data">
-        ENERGY
-        <div class="bar">
-            <div></div>
-        </div>
-    </div>
-
-    <div class="data">
-        NEURAL LINK
-        <div class="bar">
-            <div></div>
-        </div>
-    </div>
-
-    <div class="data">
-        PROCESSING
-        <div class="bar">
-            <div></div>
-        </div>
-    </div>
-
-    <div class="data">
-        CORE STABILITY
-        <div class="bar">
-            <div></div>
-        </div>
-    </div>
-
-</div>
-
-
-<!-- CHAT -->
 
 <div class="chat">
 
-    <div class="messages" id="messages">
+    <div class="response">
 
-        <div class="message vision">
-            VISION: System online.
-        </div>
+        <div class="name">VISION</div>
 
-        <div class="message vision">
-            VISION: Identity recognized — AJIT.
-        </div>
-
-        <div class="message vision">
-            VISION: Neural core initialized.
+        <div id="answer">
+            Systems online. Hello AJIT.
         </div>
 
     </div>
 
-    <div class="inputArea">
+    <div class="input-area">
 
         <input
-            id="input"
-            type="text"
-            placeholder="Talk to VISION..."
+            id="message"
+            placeholder="Speak to VISION..."
+            autocomplete="off"
         >
 
-        <button onclick="sendMessage()">
-            SEND
-        </button>
+        <button id="mic">🎙</button>
 
-        <button
-            class="mic"
-            onclick="startVoice()"
-            title="Voice"
-        >
-            🎙
-        </button>
+        <button id="send">➤</button>
 
     </div>
 
 </div>
 
-
-<!-- THREE.JS -->
-
-<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-
-
 <script>
 
-/* =========================================
-   VISION 3D CORE
-========================================= */
+/* PARTICLES */
 
-const scene =
-    new THREE.Scene();
+const space = document.getElementById("space");
 
+for(let i = 0; i < 90; i++){
 
-const camera =
-    new THREE.PerspectiveCamera(
-        60,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        1000
-    );
+    const p = document.createElement("div");
 
+    p.className = "particle";
 
-camera.position.set(
-    0,
-    0,
-    8
-);
+    p.style.left = Math.random() * 100 + "%";
 
+    p.style.animationDelay =
+        Math.random() * 8 + "s";
 
-const renderer =
-    new THREE.WebGLRenderer({
-        antialias:true,
-        alpha:true
-    });
+    p.style.animationDuration =
+        (5 + Math.random() * 8) + "s";
 
+    space.appendChild(p);
+}
 
-renderer.setPixelRatio(
-    Math.min(window.devicePixelRatio,2)
-);
 
+/* ELEMENTS */
 
-renderer.setSize(
-    window.innerWidth,
-    window.innerHeight
-);
+const input = document.getElementById("message");
+const send = document.getElementById("send");
+const mic = document.getElementById("mic");
+const answer = document.getElementById("answer");
 
 
-renderer.outputColorSpace =
-    THREE.SRGBColorSpace;
+/* TALK */
 
+async function askVision(){
 
-document
-    .getElementById("scene")
-    .appendChild(renderer.domElement);
+    const message = input.value.trim();
 
+    if(!message) return;
 
-/* =========================================
-   LIGHTING
-========================================= */
+    answer.innerText = "Thinking...";
 
-const ambient =
-    new THREE.AmbientLight(
-        0xffcc55,
-        0.35
-    );
+    send.disabled = true;
 
-scene.add(ambient);
+    try {
 
+        const response = await fetch("/api/chat", {
 
-const coreLight =
-    new THREE.PointLight(
-        0xffb300,
-        12,
-        20
-    );
+            method: "POST",
 
-scene.add(coreLight);
+            headers: {
+                "Content-Type": "application/json"
+            },
 
-
-/* =========================================
-   CENTRAL ENERGY CRYSTAL
-========================================= */
-
-const crystalGeometry =
-    new THREE.IcosahedronGeometry(
-        1.55,
-        2
-    );
-
-
-const crystalMaterial =
-    new THREE.MeshPhysicalMaterial({
-
-        color:0xffc928,
-
-        emissive:0xff8c00,
-
-        emissiveIntensity:2.5,
-
-        metalness:.25,
-
-        roughness:.12,
-
-        transmission:.15,
-
-        transparent:true,
-
-        opacity:.94,
-
-        clearcoat:1,
-
-        clearcoatRoughness:.05
-
-    });
-
-
-const crystal =
-    new THREE.Mesh(
-        crystalGeometry,
-        crystalMaterial
-    );
-
-
-scene.add(crystal);
-
-
-/* =========================================
-   INNER CORE
-========================================= */
-
-const innerGeometry =
-    new THREE.IcosahedronGeometry(
-        .72,
-        3
-    );
-
-
-const innerMaterial =
-    new THREE.MeshBasicMaterial({
-
-        color:0xfff1a0,
-
-        transparent:true,
-
-        opacity:.85
-
-    });
-
-
-const innerCore =
-    new THREE.Mesh(
-        innerGeometry,
-        innerMaterial
-    );
-
-
-scene.add(innerCore);
-
-
-/* =========================================
-   OUTER CRYSTAL SHELL
-========================================= */
-
-const shellGeometry =
-    new THREE.IcosahedronGeometry(
-        1.85,
-        2
-    );
-
-
-const shellMaterial =
-    new THREE.MeshBasicMaterial({
-
-        color:0xffb300,
-
-        wireframe:true,
-
-        transparent:true,
-
-        opacity:.18
-
-    });
-
-
-const shell =
-    new THREE.Mesh(
-        shellGeometry,
-        shellMaterial
-    );
-
-
-scene.add(shell);
-
-
-/* =========================================
-   ENERGY RINGS
-========================================= */
-
-const rings = [];
-
-
-for(let i=0;i<5;i++){
-
-    const geometry =
-        new THREE.TorusGeometry(
-            2.1 + i*.25,
-            .025 + i*.005,
-            12,
-            100
-        );
-
-
-    const material =
-        new THREE.MeshBasicMaterial({
-
-            color:
-                i % 2 === 0
-                ? 0xffd84a
-                : 0xff9d00,
-
-            transparent:true,
-
-            opacity:.65
+            body: JSON.stringify({
+                message: message
+            })
 
         });
 
+        const data = await response.json();
 
-    const ring =
-        new THREE.Mesh(
-            geometry,
-            material
-        );
+        if(data.reply){
 
+            answer.innerText = data.reply;
 
-    ring.rotation.x =
-        Math.random()*Math.PI;
+            speak(data.reply);
 
-    ring.rotation.y =
-        Math.random()*Math.PI;
+        } else {
 
-    ring.rotation.z =
-        Math.random()*Math.PI;
-
-
-    scene.add(ring);
-
-    rings.push(ring);
-
-}
-
-
-/* =========================================
-   PARTICLES
-========================================= */
-
-const particleCount =
-    2600;
-
-
-const positions =
-    new Float32Array(
-        particleCount * 3
-    );
-
-
-for(let i=0;i<particleCount;i++){
-
-    const radius =
-        3 + Math.random()*7;
-
-    const theta =
-        Math.random()*Math.PI*2;
-
-    const phi =
-        Math.acos(
-            2*Math.random()-1
-        );
-
-    positions[i*3] =
-        radius *
-        Math.sin(phi) *
-        Math.cos(theta);
-
-    positions[i*3+1] =
-        radius *
-        Math.sin(phi) *
-        Math.sin(theta);
-
-    positions[i*3+2] =
-        radius *
-        Math.cos(phi);
-
-}
-
-
-const particleGeometry =
-    new THREE.BufferGeometry();
-
-
-particleGeometry.setAttribute(
-    "position",
-    new THREE.BufferAttribute(
-        positions,
-        3
-    )
-);
-
-
-const particleMaterial =
-    new THREE.PointsMaterial({
-
-        color:0xffd75a,
-
-        size:.025,
-
-        transparent:true,
-
-        opacity:.8,
-
-        blending:
-            THREE.AdditiveBlending
-
-    });
-
-
-const particles =
-    new THREE.Points(
-        particleGeometry,
-        particleMaterial
-    );
-
-
-scene.add(particles);
-
-
-/* =========================================
-   ENERGY BEAMS
-========================================= */
-
-const beams = [];
-
-
-for(let i=0;i<10;i++){
-
-    const geometry =
-        new THREE.CylinderGeometry(
-            .008,
-            .025,
-            5,
-            8
-        );
-
-
-    const material =
-        new THREE.MeshBasicMaterial({
-
-            color:0xffb300,
-
-            transparent:true,
-
-            opacity:.25
-
-        });
-
-
-    const beam =
-        new THREE.Mesh(
-            geometry,
-            material
-        );
-
-
-    beam.rotation.x =
-        Math.random()*Math.PI;
-
-    beam.rotation.z =
-        Math.random()*Math.PI;
-
-
-    scene.add(beam);
-
-    beams.push(beam);
-
-}
-
-
-/* =========================================
-   MOUSE INTERACTION
-========================================= */
-
-let mouseX = 0;
-let mouseY = 0;
-
-
-document.addEventListener(
-    "mousemove",
-    event => {
-
-        mouseX =
-            (event.clientX /
-            window.innerWidth - .5) * 2;
-
-        mouseY =
-            (event.clientY /
-            window.innerHeight - .5) * 2;
-
-    }
-);
-
-
-/* =========================================
-   ANIMATION
-========================================= */
-
-const clock =
-    new THREE.Clock();
-
-
-function animate(){
-
-    requestAnimationFrame(
-        animate
-    );
-
-
-    const time =
-        clock.getElapsedTime();
-
-
-    crystal.rotation.x =
-        time * .18;
-
-    crystal.rotation.y =
-        time * .25;
-
-
-    innerCore.rotation.x =
-        -time * .35;
-
-    innerCore.rotation.y =
-        time * .45;
-
-
-    shell.rotation.x =
-        time * .08;
-
-    shell.rotation.y =
-        -time * .12;
-
-
-    rings.forEach(
-        (ring,index) => {
-
-            ring.rotation.x +=
-                .0015 * (index+1);
-
-            ring.rotation.y +=
-                .002 * (index+1);
-
-            ring.rotation.z +=
-                .0007 * (index+1);
+            answer.innerText =
+                "VISION could not process that request.";
 
         }
-    );
 
+    } catch(error){
 
-    particles.rotation.y =
-        time * .018;
+        console.error(error);
 
-    particles.rotation.x =
-        Math.sin(time*.15)*.08;
-
-
-    beams.forEach(
-        (beam,index) => {
-
-            beam.rotation.y +=
-                .001 * (index+1);
-
-            beam.rotation.x +=
-                .0006 * (index+1);
-
-        }
-    );
-
-
-    /* CAMERA PARALLAX */
-
-    camera.position.x +=
-        ((mouseX*.35) -
-        camera.position.x) * .025;
-
-    camera.position.y +=
-        ((-mouseY*.25) -
-        camera.position.y) * .025;
-
-
-    camera.lookAt(
-        0,
-        0,
-        0
-    );
-
-
-    /* CORE PULSE */
-
-    const pulse =
-        1 +
-        Math.sin(time*2.2)*.035;
-
-    crystal.scale.set(
-        pulse,
-        pulse,
-        pulse
-    );
-
-
-    coreLight.intensity =
-        10 +
-        Math.sin(time*3)*3;
-
-
-    renderer.render(
-        scene,
-        camera
-    );
-
-}
-
-
-animate();
-
-
-/* =========================================
-   RESIZE
-========================================= */
-
-window.addEventListener(
-    "resize",
-    () => {
-
-        camera.aspect =
-            window.innerWidth /
-            window.innerHeight;
-
-        camera.updateProjectionMatrix();
-
-        renderer.setSize(
-            window.innerWidth,
-            window.innerHeight
-        );
+        answer.innerText =
+            "Connection error. VISION cannot reach its AI core.";
 
     }
-);
-
-
-/* =========================================
-   CHAT SYSTEM
-========================================= */
-
-function addMessage(
-    text,
-    type
-){
-
-    const messages =
-        document.getElementById(
-            "messages"
-        );
-
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.className =
-        "message " + type;
-
-
-    div.innerText =
-        text;
-
-
-    messages.appendChild(
-        div
-    );
-
-
-    messages.scrollTop =
-        messages.scrollHeight;
-
-}
-
-
-/* =========================================
-   VISION RESPONSE
-========================================= */
-
-function visionResponse(
-    question
-){
-
-    const q =
-        question.toLowerCase();
-
-
-    if(
-        q.includes("hello") ||
-        q.includes("hi") ||
-        q.includes("hey")
-    ){
-
-        return "Hello AJIT. VISION neural core is online.";
-
-    }
-
-
-    if(
-        q.includes("who am i") ||
-        q.includes("my name")
-    ){
-
-        return "You are AJIT. Identity confirmed.";
-
-    }
-
-
-    if(
-        q.includes("who are you")
-    ){
-
-        return "I am VISION, an advanced personal AI interface.";
-
-    }
-
-
-    if(
-        q.includes("status")
-    ){
-
-        return "All systems operational. Neural core stable.";
-
-    }
-
-
-    if(
-        q.includes("vision")
-    ){
-
-        return "Yes AJIT. I am listening.";
-
-    }
-
-
-    return "I received your command, AJIT. My neural interface is ready for further instructions.";
-
-}
-
-
-/* =========================================
-   SEND MESSAGE
-========================================= */
-
-function sendMessage(){
-
-    const input =
-        document.getElementById(
-            "input"
-        );
-
-
-    const text =
-        input.value.trim();
-
-
-    if(!text)
-        return;
-
-
-    addMessage(
-        "AJIT: " + text,
-        "user"
-    );
-
 
     input.value = "";
 
-
-    setTimeout(
-        () => {
-
-            const answer =
-                visionResponse(
-                    text
-                );
-
-
-            addMessage(
-                "VISION: " + answer,
-                "vision"
-            );
-
-
-            speak(answer);
-
-        },
-        500
-    );
-
+    send.disabled = false;
 }
 
 
-/* ENTER KEY */
+/* SEND */
 
-document
-    .getElementById("input")
-    .addEventListener(
-        "keydown",
-        event => {
-
-            if(
-                event.key === "Enter"
-            ){
-
-                sendMessage();
-
-            }
-
-        }
-    );
+send.addEventListener("click", askVision);
 
 
-/* =========================================
-   VOICE
-========================================= */
+/* ENTER */
 
-function startVoice(){
+input.addEventListener("keydown", function(event){
 
-    const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
+    if(event.key === "Enter"){
 
-
-    if(!SpeechRecognition){
-
-        addMessage(
-            "VISION: Voice recognition is not supported by this browser.",
-            "vision"
-        );
-
-        return;
+        askVision();
 
     }
 
+});
+
+
+/* VOICE OUTPUT */
+
+function speak(text){
+
+    if(!("speechSynthesis" in window)) return;
+
+    window.speechSynthesis.cancel();
+
+    const speech =
+        new SpeechSynthesisUtterance(text);
+
+    speech.rate = 1;
+    speech.pitch = .85;
+    speech.volume = 1;
+
+    window.speechSynthesis.speak(speech);
+}
+
+
+/* VOICE INPUT */
+
+const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+if(SpeechRecognition){
 
     const recognition =
         new SpeechRecognition();
 
+    recognition.lang = "en-IN";
 
-    recognition.lang =
-        "en-IN";
+    recognition.continuous = false;
 
-
-    recognition.interimResults =
-        false;
+    recognition.interimResults = false;
 
 
-    recognition.onstart =
-        () => {
+    mic.addEventListener("click", function(){
 
-            addMessage(
-                "VISION: Listening...",
-                "vision"
-            );
+        recognition.start();
 
-        };
+        mic.innerText = "🔴";
+
+    });
 
 
-    recognition.onresult =
-        event => {
+    recognition.onresult = function(event){
 
-            const text =
-                event.results[0][0]
-                .transcript;
+        const text =
+            event.results[0][0].transcript;
 
+        input.value = text;
 
-            document.getElementById(
-                "input"
-            ).value = text;
+        mic.innerText = "🎙";
 
+        askVision();
 
-            sendMessage();
-
-        };
+    };
 
 
-    recognition.onerror =
-        () => {
+    recognition.onerror = function(){
 
-            addMessage(
-                "VISION: I could not hear you clearly.",
-                "vision"
-            );
+        mic.innerText = "🎙";
 
-        };
+    };
 
 
-    recognition.start();
+    recognition.onend = function(){
 
-}
+        mic.innerText = "🎙";
 
+    };
 
-/* =========================================
-   TEXT TO SPEECH
-========================================= */
+}else{
 
-function speak(text){
-
-    if(
-        !("speechSynthesis" in window)
-    )
-        return;
-
-
-    window.speechSynthesis.cancel();
-
-
-    const speech =
-        new SpeechSynthesisUtterance(
-            text
-        );
-
-
-    speech.lang =
-        "en-IN";
-
-
-    speech.rate =
-        .92;
-
-
-    speech.pitch =
-        .85;
-
-
-    speech.volume =
-        1;
-
-
-    window.speechSynthesis.speak(
-        speech
-    );
+    mic.style.display = "none";
 
 }
 
